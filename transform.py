@@ -1,15 +1,15 @@
 import pandas as pd
+import numpy as np
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 
 # Split Dataframe into train and test
 def train_test_split(df):
     df["snapshot"] = pd.to_datetime(df["snapshot"])
-    df = df.sort_values(["customer_id", "snapshot"])
+    df_srt = df.sort_values(["customer_id", "snapshot"])
 
-    rev_rank = df.groupby("customer_id").cumcount(ascending=False)
+    rev_rank = df_srt.groupby("customer_id").cumcount(ascending=False)
 
-    test = df[rev_rank == 1]
-    train = df[rev_rank >= 1]
+    train = df_srt[rev_rank >= 1]
 
     features = [
         "total_order_value",
@@ -32,12 +32,12 @@ def train_test_split(df):
 
     # Split data into test and train
     X_train = train[features].to_numpy()
-    X_test = test[features].to_numpy()
-
     y_train = train['customer_churned']
-    y_test = test['customer_churned']
 
-    return X_train, y_train, X_test, y_test
+
+    X = df[features].to_numpy()
+
+    return X_train, y_train, X
 
 # Create polynomial features and scale variables
 def transform(X):
