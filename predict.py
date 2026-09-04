@@ -2,7 +2,7 @@ import pandas as pd
 from train import train_model
 from transform import train_test_split, transform
 
-df = pd.read_csv('online_retail_cleaned.csv')
+df = pd.read_csv('online_retail_cleaned.csv', index_col=False)
 
 X_train, y_train, X = train_test_split(df)
 X = transform(X)    
