@@ -63,6 +63,7 @@ cleaned_transactions AS (
         description,
         order_value,
         quantity,
+        MIN(invoice_date) OVER(PARTITION BY customer_id) AS first_purchase_date,
         CASE WHEN description = 'Discount' THEN 1 ELSE 0 END AS is_discount,
         CASE WHEN description = 'Discount' THEN order_value ELSE 0 END AS discount_value,
         CASE WHEN quantity < 0 THEN 1 ELSE 0 END AS is_return,
@@ -84,6 +85,7 @@ snapshot_behaviour AS (
         COUNT(DISTINCT CASE WHEN c.is_product = 1 THEN c.description END)       AS snapshot_unique_products_ordered,
         SUM(c.discount_value)                                                   AS snapshot_discount_value,
         SUM(c.returns_value)                                                    AS snapshot_returns_value,
+        DATE_DIFF('day', MAX(first_purchase_date), MAX(invoice_date))           AS customer_age
     FROM
         customer_snapshots s
     LEFT JOIN
@@ -140,6 +142,7 @@ SELECT
     b.snapshot_unique_products_ordered,
     b.snapshot_discount_value,
     b.snapshot_returns_value,
+    b.customer_age,
 
 -- Churn Flag: 1 if the NEXT snapshot period has ZERO or NULL orders
 CASE 
@@ -163,3 +166,5 @@ QUALIFY LAG(snapshot_orders_placed, 1, 1) OVER (
 
 df_model_features = df_model_features.fillna(0)
 df_model_features.to_csv('online_retail_cleaned.csv')
+
+print("Successfully created dataset")

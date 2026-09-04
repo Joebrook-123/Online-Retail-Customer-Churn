@@ -28,6 +28,7 @@ def train_test_split(df):
         "snapshot_unique_products_ordered",
         "snapshot_discount_value",
         "snapshot_returns_value",
+        "customer_age"
     ]
 
     # Split data into test and train
