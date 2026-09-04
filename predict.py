@@ -43,7 +43,7 @@ df = pd.merge(
     on=['customer_id', 'snapshot'],
     how='left'
 )
-df.fillna(0) 
+df = df.fillna(0) 
 
 # 3. Clean up the temporary column (optional)
 df.drop(columns=['pct_rank'], inplace=True)
