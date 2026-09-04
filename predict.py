@@ -45,6 +45,24 @@ def map_risk(pct):
 df['risk_category'] = df['pct_rank'].apply(map_risk)
 df.drop(columns=['pct_rank'], inplace=True)
 
+# Forward fill missing snapshots with the previous snapshots value for cumulative measures
+df = df.sort_values(['customer_id', 'snapshot']).reset_index(drop=True)
+
+cumulative_cols = [
+    'total_discount_value',
+    'total_discounts',
+    'total_order_value',
+    'total_orders_placed',
+    'total_orders_returned',
+    'total_returns_value'
+]
+
+df[cumulative_cols] = (
+    df.groupby('customer_id')[cumulative_cols]
+    .ffill()
+    .fillna(0)
+)
+
 numeric_col = [
     'total_order_value',
     'total_orders_placed',
