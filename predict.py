@@ -1,13 +1,11 @@
-import numpy as np
 import pandas as pd
 from train import train_model
 from transform import train_test_split, transform
 
-df = pd.read_csv('online_retail_cleaned')
+df = pd.read_csv('online_retail_cleaned.csv')
 
 X_train, y_train, X = train_test_split(df)
-X_train = transform(X_train)
-X = transform(X)
+X = transform(X)    
 
 model = train_model(X_train, y_train)
 

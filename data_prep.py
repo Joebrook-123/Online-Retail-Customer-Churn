@@ -6,7 +6,7 @@ import pandas as pd
 online_retail = fetch_ucirepo(id=352) 
 data = online_retail.data.original 
 
-df = duckdb.sql(
+df_model_features = duckdb.sql(
 '''
 WITH RECURSIVE online_retail AS (
     SELECT
@@ -161,6 +161,5 @@ QUALIFY LAG(snapshot_orders_placed, 1, 1) OVER (
 '''
 ).df()
 
-df = df.fillna(0)
-
-df.to_csv('online_retail_cleaned.csv')
+df_model_features = df_model_features.fillna(0)
+df_model_features.to_csv('online_retail_cleaned.csv')
