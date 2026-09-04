@@ -26,6 +26,25 @@ def map_risk(pct):
 
 df['risk_category'] = df['pct_rank'].apply(map_risk)
 
+# Cross joining data for visualisation in Tableau
+unique_customers = df['customer_id'].drop_duplicates()
+unique_snapshots = df['snapshot'].drop_duplicates()
+
+# Cross join grid
+grid = pd.MultiIndex.from_product(
+    [unique_customers, unique_snapshots],
+    names=['customer_id', 'snapshot'],
+).to_frame().reset_index(drop=True)
+
+# Join original dataframe onto every snapshot and customer combination
+df = pd.merge(
+    grid, 
+    df, 
+    on=['customer_id', 'snapshot'],
+    how='left'
+)
+df.fillna(0) 
+
 # 3. Clean up the temporary column (optional)
 df.drop(columns=['pct_rank'], inplace=True)
 
