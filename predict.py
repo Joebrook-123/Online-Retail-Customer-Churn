@@ -30,20 +30,6 @@ df = pd.merge(
     how='left'
 )
 
-# Defining categories of risk based on percentiles
-df['pct_rank'] = df.groupby('snapshot')['churn_probability'].rank(method='first', pct=True)
-
-def map_risk(pct):
-    if pct >= 0.70:
-        return 'High Risk'
-    elif pct >= 0.30:
-        return 'Medium Risk'
-    else:
-        return 'Low Risk'
-
-df['risk_category'] = df['pct_rank'].apply(map_risk)
-df.drop(columns=['pct_rank'], inplace=True)
-
 # Forward fill missing snapshots with the previous snapshots value for cumulative measures
 df = df.sort_values(['customer_id', 'snapshot']).reset_index(drop=True)
 
@@ -93,4 +79,5 @@ df[float_cols] = df[float_cols].astype('float64')
 
 # Export results to a Tableau hyper file
 pantab.frame_to_hyper(df, 'customer_churn_predictions.hyper', table='churn_data')
+df.to_csv('customer_churn_predictions.csv')
 print("Successfully generated Tableau Hyper extract!")
