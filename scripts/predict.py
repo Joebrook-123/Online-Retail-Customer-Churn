@@ -3,7 +3,7 @@ from train import train_model
 from transform import train_test_split
 import pantab
 
-df = pd.read_csv('online_retail_cleaned.csv', index_col=False)
+df = pd.read_csv('data/online_retail_cleaned.csv', index_col=False)
 df['snapshot'] = pd.to_datetime(df['snapshot'])
 
 X_train, y_train, X = train_test_split(df)  
@@ -78,6 +78,6 @@ float_cols = df.select_dtypes(include=['float32']).columns
 df[float_cols] = df[float_cols].astype('float64')
 
 # Export results to a Tableau hyper file
-pantab.frame_to_hyper(df, 'customer_churn_predictions.hyper', table='churn_data')
-df.to_csv('customer_churn_predictions.csv')
+pantab.frame_to_hyper(df, 'data/customer_churn_predictions.hyper', table='churn_data')
+df.to_csv('data/customer_churn_predictions.csv')
 print("Successfully generated Tableau Hyper extract!")

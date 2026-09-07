@@ -166,6 +166,6 @@ QUALIFY LAG(snapshot_orders_placed, 1, 1) OVER (
 ).df()
 
 df_model_features = df_model_features.fillna(0)
-df_model_features.to_csv('online_retail_cleaned.csv')
+df_model_features.to_csv('data/online_retail_cleaned.csv')
 
 print("Successfully created dataset")
