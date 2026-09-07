@@ -1,0 +1,7 @@
+duckdb==1.5.5
+numpy==2.5.3
+pandas==3.0.5
+pantab==5.3.0
+scikit-learn==1.9.0
+ucimlrepo==0.0.7
+xgboost==3.4.1
