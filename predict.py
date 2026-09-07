@@ -1,13 +1,12 @@
 import pandas as pd
 from train import train_model
-from transform import train_test_split, transform
+from transform import train_test_split
 import pantab
 
 df = pd.read_csv('online_retail_cleaned.csv', index_col=False)
 df['snapshot'] = pd.to_datetime(df['snapshot'])
 
-X_train, y_train, X = train_test_split(df)
-X = transform(X)    
+X_train, y_train, X = train_test_split(df)  
 
 model = train_model(X_train, y_train)
 y_proba = model.predict_proba(X)[:, 1]

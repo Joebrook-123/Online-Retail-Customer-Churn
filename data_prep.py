@@ -65,7 +65,7 @@ cleaned_transactions AS (
         quantity,
         MIN(invoice_date) OVER(PARTITION BY customer_id) AS first_purchase_date,
         CASE WHEN description = 'Discount' THEN 1 ELSE 0 END AS is_discount,
-        CASE WHEN description = 'Discount' THEN order_value ELSE 0 END AS discount_value,
+        CASE WHEN description = 'Discount' THEN order_value * -1 ELSE 0 END AS discount_value,
         CASE WHEN quantity < 0 THEN 1 ELSE 0 END AS is_return,
         CASE WHEN quantity < 0 THEN order_value * -1 ELSE 0 END AS returns_value,
         CASE WHEN ASCII(description) = ASCII(UPPER(description)) THEN 1 ELSE 0 END AS is_product
@@ -156,7 +156,8 @@ FROM
     customer_history a 
 LEFT JOIN
     snapshot_behaviour b USING(snapshot, customer_id)
-
+WHERE
+    a.total_order_value > 0 -- removes outliers whos orders were made before the datas min date then returned them
 QUALIFY LAG(snapshot_orders_placed, 1, 1) OVER (
     PARTITION BY customer_id
     ORDER BY snapshot

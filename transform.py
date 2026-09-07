@@ -40,12 +40,3 @@ def train_test_split(df):
 
     return X_train, y_train, X
 
-# Create polynomial features and scale variables
-def transform(X):
-    poly = PolynomialFeatures(degree=3)
-    scaler = StandardScaler()
-
-    X = poly.fit_transform(X)
-    X = scaler.fit_transform(X)
-
-    return X

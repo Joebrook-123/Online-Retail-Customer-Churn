@@ -1,10 +1,8 @@
 import pandas as pd
 import numpy as np
 import xgboost as xgb
-from transform import transform
 
 def train_model(X_train, y_train):
-    X_train = transform(X_train)
 
     model = xgb.XGBClassifier(
         n_estimators = 100, 
